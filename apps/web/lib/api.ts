@@ -7,7 +7,8 @@ export async function importCsv(file: File): Promise<ImportResponse> {
   formData.append("file", file);
 
   const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
-  const url = isLocalhost ? "/api/import" : `${apiBaseUrl}/api/import`;
+  const baseUrlCleaned = apiBaseUrl.replace(/\/$/, "");
+  const url = isLocalhost ? "/api/import" : `${baseUrlCleaned}/api/import`;
   console.log(">>> [Frontend API] Fetching from:", url);
   
   try {
