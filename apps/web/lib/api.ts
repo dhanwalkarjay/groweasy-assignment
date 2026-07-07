@@ -6,10 +6,12 @@ export async function importCsv(file: File): Promise<ImportResponse> {
   const formData = new FormData();
   formData.append("file", file);
 
-  console.log(">>> [Frontend API] Fetching from proxy: /api/import");
+  const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
+  const url = isLocalhost ? "/api/import" : `${apiBaseUrl}/api/import`;
+  console.log(">>> [Frontend API] Fetching from:", url);
   
   try {
-    const response = await fetch("/api/import", {
+    const response = await fetch(url, {
       method: "POST",
       body: formData
     });
