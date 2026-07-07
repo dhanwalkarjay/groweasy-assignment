@@ -15,10 +15,15 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      const isLocalhost = origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:");
-      if (isLocalhost || origin === env.corsOrigin || env.corsOrigin === "*") {
+      const originLower = origin.toLowerCase();
+      const isLocalhost = originLower.startsWith("http://localhost:") || originLower.startsWith("http://127.0.0.1:");
+      const isVercel = originLower.endsWith(".vercel.app");
+      const isCustomAllowed = env.corsOrigin && (origin === env.corsOrigin || env.corsOrigin === "*");
+      
+      if (isLocalhost || isVercel || isCustomAllowed) {
         return callback(null, true);
       }
+      console.warn(`>>> [CORS] Blocked origin: ${origin}`);
       callback(null, false);
     },
     credentials: true
